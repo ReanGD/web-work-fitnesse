@@ -1,0 +1,62 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Результаты fitnesse тестов</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'project/css/fitnesse.css' %}" />
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Результаты fitnesse тестов</h1>
+    </div>
+    <div class="panel panel-default">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header"><p class="navbar-text">Список задач</p></div>
+          <div class="collapse navbar-collapse navbar-right">
+              <button type="button" onclick="document.location = '{% url 'fitnesse:common_settings_show' %}'" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-wrench"></span> Settings</button>
+              <button type="button" onclick="document.location = '{% url 'fitnesse:changelog' %}'" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-bullhorn"></span> Changelog</button>
+          </div>
+        </div>
+      </nav>
+      <div class="panel-body">
+        <ul class="nav nav-pills nav-stacked">
+        {% for rec in jobs %}
+          <li>
+            <ul class="nav nav-pills">
+              <li class="nav-job">
+                <a href="{% url 'fitnesse:results_aggregation' rec.id %}" class="navbar-link">{{ rec.name }}
+                  <div class="pull-right">
+                    <span class="badge col-build-count">{{ rec.build_count }}</span>
+                    <span class="col-build-last-stat">{{ rec.last_build_stat }}</span>
+                    <span class="col-build-last-time">{{ rec.start_time }}</span>
+                    <span class="col-build-last">{{ rec.build_last }}</span>
+                  </div>
+                </a>
+              </li>
+              <li class="dropdown pull-right">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'fitnesse:job_settings_show' rec.id %}" class="navbar-link"><span class="glyphicon glyphicon-wrench"></span> Settings</a></li>
+                  <li><a href="{% url 'fitnesse:job_charts' rec.id %}" class="navbar-link"><span class="glyphicon glyphicon-signal"></span> Charts</a></li>                  
+                </ul>
+              </li>
+            </ul>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

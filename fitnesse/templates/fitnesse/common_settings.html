@@ -1,0 +1,31 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Общие настройки</title>
+  <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+</head>
+<body>
+  <form action="{% url 'fitnesse:common_settings_save' %}" method="post" role="form">
+    {% csrf_token %}
+    <div class="container">
+      <div class="page-header">
+        <h1>Общие настройки</h1>
+      </div>
+      <div class="form-group">
+        <label for="JenkinsUrl-id">Jenkins url</label>
+        <input class="form-control" type="url" name="JenkinsUrl" id="JenkinsUrl-id" value="{{ JenkinsUrl }}" placeholder="http://0.0.0.0:8080/">
+      </div>
+      <button type="submit" class="btn btn-default">Сохранить</button>
+    </div>
+  </form>
+  <script src="{% static 'jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

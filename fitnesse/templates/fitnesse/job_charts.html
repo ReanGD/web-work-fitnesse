@@ -1,0 +1,76 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Графики для {{ Job.name }}</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="{% static 'project/css/fitnesse.css' %}" rel="stylesheet"/>
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+</head>
+<body>
+  <div class="container">
+    <ol class="fit_breadcrumb">
+      <li><a href="/fitnesse/">Home</a><span class="divider">/</span></li>
+      <li class="active">{{Job.name}}</li>
+    </ol>
+    <div id="error_chart"></div>
+  </div>
+  <script src="{% static 'jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>  
+  <script src="{% static 'Highcharts-4.0.0/js/highcharts.js' %}"></script>  
+
+  <script type="text/javascript">
+  $(function () {
+    $('#error_chart').highcharts({
+      chart: { type: 'area' },
+      title: { text: 'Fitnesse Results Trend for' },
+      subtitle: { text: '{{ Job.name }}' },
+      xAxis: {
+        {% autoescape off %}
+        categories: {{ Builds }},
+        {% endautoescape %}
+        tickmarkPlacement: 'on',
+        title: { enabled: false }
+      },
+      yAxis: {
+        type: 'linear',
+        tickInterval: 20,
+        title: { text: 'count' }
+      },
+      tooltip: {
+        shared: true,
+        formatter: function() {
+          var s='';
+          s += '<b> build '+ this.x +'</b>';
+          s += '<br/>'+ '<span style="color:'+this.points[0].series.color+'">\u25CF </span>' + this.points[0].series.name +': '+ this.points[0].y;
+          s += '<br/>'+ '<span style="color:'+this.points[1].series.color+'">\u25CF </span>' + this.points[1].series.name +': '+ this.points[1].y;
+          s += '<br/>Total: ' + ((+this.points[0].y) + (+this.points[1].y));
+          return s;
+        },
+      },
+      plotOptions: {
+        area: {
+          stacking: 'normal',
+          lineColor: '#ffffff',
+          lineWidth: 0,
+          marker: {
+            lineColor: '#ffffff',
+            enabled: false,
+            symbol: 'circle'
+          }
+        }
+      },
+      series: [
+        { name: 'Succeess', data: {{ Succeess }}, color: '#00BB00' },
+        { name: 'Error', data: {{ Error }}, color: '#EE0000' }
+      ]
+    });
+  });
+  </script>
+</body>
+</html>

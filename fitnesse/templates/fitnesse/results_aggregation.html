@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Результаты fitnesse тестов для задачи {{ job.name }}</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'SlickGrid-2.2.0/slick.grid.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'SlickGrid-2.2.0/examples/examples.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'project/css/fitnesse.css' %}" />
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+</head>
+<body>
+  <ul class="fit_breadcrumb">
+    <li><a href="/fitnesse/">Home</a><span class="divider">/</span></li>
+    <li class="active">{{ job.name }}</li>
+  </ul>
+  <div class="fitnesse-result-grid"></div>
+
+<script src="{% static 'SlickGrid-2.2.0/lib/jquery-1.7.min.js' %}"></script>
+<script src="{% static 'SlickGrid-2.2.0/lib/jquery.event.drag-2.2.js' %}"></script>
+<script src="{% static 'SlickGrid-2.2.0/slick.core.js' %}"></script>
+<script src="{% static 'SlickGrid-2.2.0/slick.grid.js' %}"></script>
+<script src="{% static 'SlickGrid-2.2.0/slick.dataview.js' %}"></script>
+<script src="{% static 'project/js/aggregation.grid.js' %}"></script>
+
+<script>
+$(function () {
+  {% autoescape off %}
+  var builds = {{builds}};
+  var tests = {{tests}};
+  var url_base = {{url_base}};
+  {% endautoescape %}
+  AggregationGridCreate(builds, tests, url_base);
+  $(".slick-viewport").focus();
+})
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,81 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Результаты fitnesse теста</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'project/css/fitnesse.css' %}" />
+  <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+  <style type="text/css">
+  #frame_fitnesse_result {
+    top:0px;
+    left:0px;
+    width:100%;   
+  }
+
+  .test-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+
+  #clientw8 {
+    overflow: auto;
+    font-family: "Fixedsys";
+    font-size: 12px;
+  }
+
+  .main_log {
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: #e5e5e5;
+  }
+
+  .fitnesse-error {
+    color: red;
+    display: inline-block;
+  }
+</style>
+</head>
+  <body>
+    <ol class="fit_breadcrumb">
+      <li><a href="/fitnesse/">Home</a><span class="divider">/</span></li>
+      <li><a href="/fitnesse/{{job.id}}/">{{job.name}}</a><span class="divider">/</span></li>
+      <li class="active">{{test_name}}</li>
+    </ol>
+    <div class="test-content">
+
+      <ul class="nav nav-tabs" id="myTab" data-tabs="tabs">
+        <li class="active">
+          <a href="#fitnesse_result" data-toggle="tab">Fitnesse result</a>
+        </li>
+        <li>
+          <a href="#clientw8" data-toggle="tab">ClientW8</a>
+        </li>
+      </ul>
+      <div id="content" class="tab-content">
+        <div class="tab-pane active" id="fitnesse_result">
+          <iframe id="frame_fitnesse_result" src="{% url 'fitnesse:fitnesse_result' job.id test_id %}" frameborder="no" seamless scrolling="no">
+            Браузер не поддерживает iframe. Обновитесь.
+          </iframe>
+        </div>  
+        <div class="tab-pane" id="clientw8">
+          {% autoescape off %}
+          {{ fitnesse_result.before }}
+          <div class="main_log">{{ fitnesse_result.test }}</div>
+          {{ fitnesse_result.after }}
+          {% endautoescape %}
+        </div>
+      </div>
+
+    </div>
+
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+  </body>
+</html>

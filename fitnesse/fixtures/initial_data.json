@@ -1,0 +1,17 @@
+[
+{
+  "pk": 1, 
+  "model": "fitnesse.keybuildartifact", 
+  "fields": {
+    "subkey": "fitnesse_log", 
+    "key": "ClientW8"
+  }
+},
+{
+  "pk": 1, 
+  "model": "fitnesse.keytestartifact", 
+  "fields": {
+    "key": "fitnesse_result"
+  }
+}
+]
