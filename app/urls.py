@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url(r'^fitnesse/', include('fitnesse.urls', namespace="fitnesse")),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^gitlab/', include('gitlab.urls', namespace="gitlab")),
-    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/app/favicon.ico')),
 )
