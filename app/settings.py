@@ -84,7 +84,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/www/site/logs/debug.log',
+            'filename': '/www/tmp/fitnesse_debug.log',
             'formatter': 'standard'
         },
     },
