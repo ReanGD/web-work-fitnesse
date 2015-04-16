@@ -1,0 +1,96 @@
+body {
+  background-color: #ffffff;
+}
+a {
+  color: #0088cc;
+  text-decoration: none;
+}
+a:hover {
+  color: #005580;
+  text-decoration: underline;
+}
+
+.fit_breadcrumb {
+  margin-top: 0px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+}
+.fit_breadcrumb li {
+  display: inline-block;
+  text-shadow: 0 1px 0 #ffffff;
+  background: none;
+  padding: 0;
+}
+.fit_breadcrumb .divider {
+  padding: 0 5px;
+  color: #999999;
+}
+.fit_breadcrumb .active a {
+  color: #333333;
+}
+
+span.toggle {
+  height: 9px;
+  width: 9px;
+  display: inline-block;
+}
+
+span.toggle.expand {
+  background: url('../images/expand.gif') no-repeat center center;
+}
+
+span.toggle.collapse {
+  background: url('../images/collapse.gif') no-repeat center center;
+}
+
+span.test-name {
+  width: 20px;
+}
+
+.cell-title {
+  font-weight: bold;
+}
+
+.cell-error {
+  background: red;
+  cursor: pointer;
+}
+
+.cell-success {
+  background: green;
+  cursor: pointer;
+}
+
+.fitnesse-result-grid {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.nav>li.nav-job {
+  left: 0;
+  right: 30px;
+  position: absolute;
+}
+
+span.col-build-last {
+  float: right;
+  width: 65px;
+}
+
+span.col-build-last-time {
+  float: right;
+  width: 125px;
+}
+
+span.col-build-last-stat { 
+  float: right;
+  width: 120px;
+}
+
+span.col-build-count { 
+  float: right;
+  width: 28px;
+}
