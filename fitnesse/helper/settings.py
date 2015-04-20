@@ -8,7 +8,7 @@ def get_jenkins_url():
     try:
         return CommonSettings.objects.get(name = "JenkinsUrl").text
     except Exception, e:
-        return 'http://172.28.1.33:8080/'
+        return 'http://172.28.1.33/'
 
 def set_jenkins_url(value):
     try:
