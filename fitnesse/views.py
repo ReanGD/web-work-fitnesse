@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import Count, Sum, Max
+from django.db.models import Count, Sum, Max, Q
 from django.utils.html import escape
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404
@@ -26,7 +26,7 @@ def import_job(request, job_name):
 def jobs(request):
     jobs = Job.objects.all().annotate(build_count=Count('build'), build_last=Max('build__number'), start_time=Max('build__number'), _stat=Max('build__number')).order_by('name')
     last_jobs = [job.build_last for job in jobs]        
-    builds_results = Test.objects.filter(suite_ptr__build_ptr__number__in = last_jobs).values('suite_ptr__build_ptr__job_ptr__id', 'suite_ptr__build_ptr__start_time').annotate(dummy=Count('suite_ptr__build_ptr__id'), total = Count('id'), count_succeess = Sum('is_success')).order_by('suite_ptr__build_ptr__number')    
+    builds_results = Test.objects.filter(suite_ptr__build_ptr__number__in = last_jobs).values('suite_ptr__build_ptr__job_ptr__id', 'suite_ptr__build_ptr__start_time').annotate(dummy=Count('suite_ptr__build_ptr__id'), total = Count('id'), count_succeess = Count('is_success', only=Q(is_success=True))).order_by('suite_ptr__build_ptr__number')    
     local_tz = pytz.timezone('Europe/Moscow')
     result_map = {it['suite_ptr__build_ptr__job_ptr__id']:
                       {'last_build_stat': '%i of %i failed' % (it['total'] - it['count_succeess'], it['total']),
@@ -42,7 +42,7 @@ def jobs(request):
 
 def job_charts(request, job_id):
     job = get_object_or_404(Job, pk = job_id)
-    query = Test.objects.filter(suite_ptr__build_ptr__job_ptr = job).values('suite_ptr__build_ptr__number').annotate(dummy=Count('suite_ptr__build_ptr__id'), total = Count('id'), count_succeess = Sum('is_success')).order_by('suite_ptr__build_ptr__number')
+    query = Test.objects.filter(suite_ptr__build_ptr__job_ptr = job).values('suite_ptr__build_ptr__number').annotate(dummy=Count('suite_ptr__build_ptr__id'), total = Count('id'), count_succeess = Count('is_success', only=Q(is_success=True))).order_by('suite_ptr__build_ptr__number')
     
     separators = (',', ':')
     builds = json.dumps(['#' + str(it['suite_ptr__build_ptr__number']) for it in query], separators=separators)
