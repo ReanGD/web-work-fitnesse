@@ -9,7 +9,7 @@
   <meta name="author" content="">
   <title>Результаты fitnesse тестов</title>
   <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{% static 'project/css/fitnesse.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'fitnesse/project/css/fitnesse.css' %}" />
   <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
 </head>
 <body>
@@ -46,7 +46,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'fitnesse:job_settings_show' rec.id %}" class="navbar-link"><span class="glyphicon glyphicon-wrench"></span> Settings</a></li>
-                  <li><a href="{% url 'fitnesse:job_charts' rec.id %}" class="navbar-link"><span class="glyphicon glyphicon-signal"></span> Charts</a></li>                  
+                  <li><a href="{% url 'fitnesse:job_charts' rec.id %}" class="navbar-link"><span class="glyphicon glyphicon-signal"></span> Charts</a></li>
                 </ul>
               </li>
             </ul>
