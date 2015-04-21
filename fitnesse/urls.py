@@ -3,11 +3,12 @@ from django.views.generic.base import RedirectView
 
 from fitnesse import views
 from fitnesse import forms
+from fitnesse import actions
 
 urlpatterns = patterns('',
     url(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),
     url(r'^$', views.jobs, name='jobs'),
-    url(r'^import/(?P<job_name>\S+)/$', views.import_job, name='import_job'),
+    url(r'^import_job/(?P<job_name>\S+)/$', actions.import_job, name='import_job'),
     url(r'^changelog/$', views.changelog, name='changelog'),
     url(r'^settings_show/$', forms.common_settings_show, name='common_settings_show'),
     url(r'^settings_save/$', forms.common_settings_save, name='common_settings_save'),

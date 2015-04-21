@@ -19,10 +19,6 @@ import collections
 def changelog(request):
     return render(request, 'fitnesse/changelog.html')
 
-def import_job(request, job_name):
-    tasks.import_pool.add_task("import_job", fitnesse.import_data.import_job, job_name)
-    return HttpResponse("<html><head><title>Import</title></head><body>Add " + job_name + " to query</body></html>")
-
 def jobs(request):
     jobs = Job.objects.all().annotate(build_count=Count('build'), build_last=Max('build__number'), start_time=Max('build__number'), _stat=Max('build__number')).order_by('name')
     last_jobs = [job.build_last for job in jobs]        
