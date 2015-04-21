@@ -89,7 +89,12 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
+        # 'django': {
+        #     'handlers': ['file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        'fitnesse': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
