@@ -1,19 +1,116 @@
+{% extends "fitnesse/_base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <title>Результаты fitnesse тестов для задачи {{ job.name }}</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'slickgrid/slick.grid.css' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'slickgrid/examples/examples.css' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'fitnesse/project/css/fitnesse.css' %}" />
-  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
-</head>
-<body>
+{% block title %}Результаты fitnesse тестов для задачи {{ job.name }}{% endblock %}
+{% block css %}
+    <link href="{% static 'ng-table/ng-table.css' %}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block body %}
+<div class="container">
+  <div ng-app="main" ng-controller="DemoCtrl">
+  
+  <table ng-table="tableParams" class="table table-bordered">
+    <thead>
+      <tr>
+          <th ng-repeat="column in columns" ng-show="column.visible"
+              class="text-center sortable" ng-class="{
+                  'sort-asc': tableParams.isSortBy(column.field, 'asc'),
+                  'sort-desc': tableParams.isSortBy(column.field, 'desc')
+                }"
+              ng-click="tableParams.sorting(column.field, tableParams.isSortBy(column.field, 'asc') ? 'desc' : 'asc')">
+              {[{column.title}]}
+          </th>
+      </tr>
+    </thead>
+    <tbody ng-repeat="group in $groups">
+        <tr class="ng-table-group">
+            <td colspan="{[{$columns.length}]}">
+                <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                    <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
+                    <strong>{[{ group.value }]}</strong>
+                </a>
+            </td>
+        </tr>
+        <tr ng-hide="group.$hideRows" ng-repeat="user in group.data">
+            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field" ng-class="{ 'cell-success': user[column.field] > 0,'cell-error': user[column.field] < 0,'cell-none': user[column.field] == 0 }">
+                {[{user[column.field]}]}
+            </td>
+        </tr>
+    </tbody>
+    </table>
+
+  </div>
+</div>
+{% block script %}
+ <script src="{% static 'angular/angular.js' %}" type="text/javascript"></script>
+ <script src="{% static 'ng-table/ng-table.js' %}" type="text/javascript"></script>
+   <script type="text/javascript">
+    {% autoescape off %}
+    var builds = {{builds}};
+    var columns = [{
+        field: 'name',
+        title: 'Test Name',
+        visible: true
+      }];
+    $.each(builds, function (i, build_number) {
+       columns.push({
+          field: "b"+i.toString(),
+          title: build_number.toString(),
+          visible: true
+        });
+    });
+
+    var tests = {{tests}};
+    var data = [];
+    $.each(tests, function (suiteName, suiteValue) {
+      $.each(suiteValue, function (testName, testsValue) {
+        var v = {name: testName, role: suiteName, bbb: 55 };
+
+        var build_id = 0;
+        $.each(testsValue, function (test_id, testValue) {
+          var key = "b"+build_id.toString();
+          if (testValue[0] != 0) {
+            if (testValue[1] == 1)
+              v[key] = 1;
+            else
+              v[key] = -1;
+          } else 
+            v[key] = 0;
+          build_id = build_id + 1;
+        });
+        data.push(v);
+      });
+    });
+    {% endautoescape %}
+
+var app = angular.module('main', ['ngTable'])
+app.config(function($interpolateProvider) { $interpolateProvider.startSymbol('{[{').endSymbol('}]}'); });
+app.controller('DemoCtrl', function($scope, $filter, ngTableParams) {
+    $scope.columns = columns;
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: data.length          // count per page
+    }, {
+        groupBy: 'role',
+        total: data.length,
+        getData: function($defer, params) {
+            var orderedData = params.sorting() ?
+                    $filter('orderBy')(data, $scope.tableParams.orderBy()) :
+                    data;
+
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+});
+</script>
+
+{% endblock %}
+{% endblock %}
+
+
+
+
+
+<!-- <body>
   <ul class="fit_breadcrumb">
     <li><a href="/fitnesse/">Home</a><span class="divider">/</span></li>
     <li class="active">{{ job.name }}</li>
@@ -42,3 +139,4 @@ $(function () {
 </body>
 </html>
 
+ -->
