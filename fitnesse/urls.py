@@ -6,7 +6,7 @@ from fitnesse import forms
 from fitnesse import actions
 
 urlpatterns = patterns('',
-    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/app/favicon.ico')),
     url(r'^$', views.jobs, name='jobs'),
     url(r'^import_job/(?P<job_name>\S+)/$', actions.import_job, name='import_job'),
     url(r'^changelog/$', views.changelog, name='changelog'),
