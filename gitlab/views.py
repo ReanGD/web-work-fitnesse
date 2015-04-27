@@ -25,12 +25,12 @@ def push_event(request):
     if hook_info['ref'] == "refs/heads/master":
         logger.debug("    process master branch")
 
-        logger.debug("    run Packages-Pipeline")
-        packages_pl_job = jenk.get_job("Packages-Pipeline")
-        packages_pl_job.invoke('3MDZ0B66R79Y9MUKA66R2JFYO7GJXQKG')
+        # logger.debug("    run Packages-Pipeline")
+        # packages_pl_job = jenk.get_job("Packages-Pipeline")
+        # packages_pl_job.invoke('3MDZ0B66R79Y9MUKA66R2JFYO7GJXQKG')
 
-        logger.debug("    run hvGate-Pipeline")
-        hvGate_pl_job = jenk.get_job("hvGate-Pipeline")
+        logger.debug("    run hvGate-Pipeline-Run")
+        hvGate_pl_job = jenk.get_job("hvGate-Pipeline-Run")
         hvGate_pl_job.invoke('G08CKH1LE5L6R13LP0AGSLNO7DDXC2VN')
 
     logger.debug("<= [push_event]")
