@@ -21,8 +21,10 @@ def push_event(request):
     git_mirror_job.invoke('QZ43NKLOYITZ5Y477D86XK37VTH5XIUF')
 
     hook_info = json.loads(str(request.body))
+    logger.debug(" ref = " + hook_info['ref'])
+    logger.debug(" user_name = " + hook_info['user_name'])
 
-    if hook_info['ref'] == "refs/heads/master":
+    if hook_info['ref'] == "refs/heads/master" and hook_info['user_name'] != "Jenkins":
         logger.debug("    process master branch")
 
         # logger.debug("    run Packages-Pipeline")
