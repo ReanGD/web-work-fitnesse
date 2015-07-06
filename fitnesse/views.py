@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import Count, Sum, Max, Q
+from django.db.models import Sum, Max, Q
+from aggregate_if import Count
 from django.utils.html import escape
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404
