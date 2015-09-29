@@ -33,7 +33,7 @@ article .centered {
     font-style: italic;
 }
 
-/** Collapsable section */
+/** Collapsible section */
 .collapsible {
   background: #F9F9F9;
   margin: 5px 0px 5px 0px;
@@ -65,11 +65,11 @@ article .centered {
 }
 
 .collapsible p.title {
-  background: url(/static/fitnesse/images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
+  background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
 }
 
 .collapsible.closed p.title {
-  background: url(/static/fitnesse/images/collapsibleClosed.png) no-repeat scroll 0 2px transparent;
+  background: url(../images/collapsibleClosed.png) no-repeat scroll 0 2px transparent;
 }
 
 .collapsible > ul {
@@ -87,6 +87,42 @@ table {
 	border: 1px solid #EEEEEE;
 	border-collapse:collapse;
 }
+
+/* Table coloring */
+tr.slimRowTitle {
+	background-color: #f5f5f5;
+}
+tr.slimRowColor0 {
+	background-color: #F5FEFF;
+}
+tr.slimRowColor1 {
+	background-color: #F5FFF7;
+}
+tr.slimRowColor2 {
+	background-color: #F9F5FA;
+}
+tr.slimRowColor3 {
+	background-color: #FDF9FB;
+}
+tr.slimRowColor4 {
+	background-color: #FCFAF7;
+}
+tr.slimRowColor5 {
+	background-color: #F7FCFA;
+}
+tr.slimRowColor6 {
+	background-color: #F7F7F9;
+}
+tr.slimRowColor7 {
+	background-color: #FFFAFA;
+}
+tr.slimRowColor8 {
+	background-color: #FBF9FF;
+}
+tr.slimRowColor9 {
+	background-color: #FDFCF9;
+}
+
 td, th {
 	padding: 0.25em 0.5em;
 }

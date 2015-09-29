@@ -20,17 +20,12 @@ label {
 /** Wiki pages (wiki, test, suite, report) **/
 .wikiPage td,
 .testPage td,
-.suitePage td,
 .testExecutionReport td,
 .compareHistory td {
   white-space: pre-line;
 }
 
 /** Edit page **/
-.editPage {
-    overflow: hidden;
-}
-
 .editPage article {
     margin: 0;
 }
@@ -53,7 +48,7 @@ label {
 .editPage #pagetypes label:first-child {
     margin-left: 145px;
 }
-.editPage textarea, .editPage iframe {
+.editPage textarea {
 	display: block;
 	width: 100%;
 	height: 32em;
@@ -74,7 +69,7 @@ label {
 .tagsinput {
     display: inline;
 }
-.tagsinput .tag {
+.tag {
     background-color: #F9F9F9;
     border: 1px dotted #BF8660;
     color: #BF8660;
@@ -82,7 +77,7 @@ label {
     padding: 2px;
     text-decoration: none;
 }
-.tagsinput .tag a {
+.tag a {
     font-weight: bold;
     text-decoration: none;
     margin-left: 4px;
@@ -154,13 +149,13 @@ label.checkbox {
 tr.scenario > td:first-child,
 tr.exception > td:first-child {
 	padding-left: 16px;
-	background-image: url("/static/fitnesse/images/collapsibleOpen.png");
+	background-image: url("../images/collapsibleOpen.png");
 	background-position: 2px;
 	background-repeat: no-repeat;
 }
 tr.scenario.closed > td:first-child,
 tr.exception.closed > td:first-child {
-	background-image: url("/static/fitnesse/images/collapsibleClosed.png");
+	background-image: url("../images/collapsibleClosed.png");
 }
 tr.closed-detail {
 	display: none;
@@ -174,6 +169,11 @@ tr.exception-detail {
 #test-summary.fail,
 #test-summary.error {
     padding: 0.5em;
+    white-space: nowrap;
+}
+#test-summary.pass,
+#test-summary.fail,
+#test-summary.error {
     padding-left: 1.5em;
 }
 
@@ -204,16 +204,16 @@ span.error {
 
 #test-summary.pass,
 #test-summaries .pass {
-  background-image: url("/static/fitnesse/images/checkmark.png");
+  background-image: url("../images/checkmark.png");
 }
 #test-summary.fail,
 #test-summaries .fail {
-  background-image: url("/static/fitnesse/images/wrong.png");
+  background-image: url("../images/wrong.png");
 }
 #test-summary.error,
 #test-summaries .error,
 span.error {
-  background-image: url("/static/fitnesse/images/exception.png");
+  background-image: url("../images/exception.png");
 }
 #test-action .stop {
 	background-color: red;
@@ -252,18 +252,18 @@ span.error {
     padding-left: 22px;
 }
 .passed_tests {
-    background-image: url("/static/fitnesse/images/checkmark.png");
+    background-image: url("../images/checkmark.png");
 }
 .unrun_tests {
-    background-image: url("/static/fitnesse/images/exception.png");
+    background-image: url("../images/exception.png");
 }
 .failed_tests {
-    background-image: url("/static/fitnesse/images/wrong.png");
+    background-image: url("../images/wrong.png");
 }
 
 /** Imported pages */
 .imported header {
-	background-image: url("/static/fitnesse/images/importedPage.jpg");
+	background-image: url("../images/importedPage.jpg");
 	background-position: center top;
 	background-repeat: no-repeat;
 }
@@ -275,10 +275,10 @@ span.error {
 }
 .collapse_rim > a {
   padding-left: 16px;
-  background: url(/static/fitnesse/images/collapsibleClosed.png) no-repeat scroll 0 2px transparent;
+  background: url(../images/collapsibleClosed.png) no-repeat scroll 0 2px transparent;
 }
 .collapse_rim.open > a {
-  background: url(/static/fitnesse/images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
+  background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
 }
 
 div.contents li > a.pruned {
@@ -289,4 +289,7 @@ div.contents li > a.suite {
 }
 div.contents li > a.static {
   font-style:italic;
+}
+.CodeMirror {
+  border: 1px solid #d7d7d7;
 }
