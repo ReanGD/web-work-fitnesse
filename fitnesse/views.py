@@ -123,11 +123,12 @@ def find_suite_log(artifact, suite_name, test_name):
 
 def test_result(request, job_id, test_id):
     job = get_object_or_404(Job, pk = job_id)
-    test_info = Test.objects.filter(pk = test_id).values('name', 'suite_ptr__name', 'suite_ptr__build_ptr')
+    test_info = Test.objects.filter(pk = test_id).values('name', 'suite_ptr__name', 'suite_ptr__build_ptr', 'suite_ptr__build_ptr__number')
     if not test_info:
         raise Http404
 
     build_id = test_info[0]['suite_ptr__build_ptr']
+    build_number = str(test_info[0]['suite_ptr__build_ptr__number'])
     suite_name = str(test_info[0]['suite_ptr__name'])
     test_name = str(test_info[0]['name'])
 
@@ -136,7 +137,8 @@ def test_result(request, job_id, test_id):
     fitnesse_result = find_suite_log(artifact, suite_name, test_name)
 
     test_full_name = '%s.%s' % (suite_name, test_name)
-    return render(request, 'fitnesse/test_result.html', {'job': job, 'test_id': test_id, 'test_name': test_full_name, 'fitnesse_result': fitnesse_result})
+    build_url = settings.get_jenkins_url() + '/job/' + job.name + '/' + build_number
+    return render(request, 'fitnesse/test_result.html', {'job': job, 'test_id': test_id, 'build_id': build_number, 'build_url': build_url, 'test_name': test_full_name, 'fitnesse_result': fitnesse_result})
 
 def fitnesse_result(request, job_id, test_id):
     job = get_object_or_404(Job, pk = job_id)
