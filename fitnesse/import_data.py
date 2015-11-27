@@ -98,11 +98,19 @@ def _parse_suite_artifact(db, build, text):
         return suite.is_success
 
     try:
+        tests = {}
         for test_number, test_node in enumerate(result):
             is_success = (int(test_node.counts.wrong.text) == 0) and (int(test_node.counts.exceptions.text) == 0)
             if not is_success:
                 suite.is_success = False
-            db.add_test(suite, test_number, test_node.relativePageName.text, int(test_node.runTimeInMillis.text), is_success, test_node.content.text.encode('utf-8'))
+            test_name = test_node.relativePageName.text
+            if test_name in tests:
+                tests[test_name] += 1
+                test_name += str(tests[test_name])
+            else:
+                tests[test_name] = 1
+            db.add_test(suite, test_number, test_name, int(test_node.runTimeInMillis.text), is_success, test_node.content.text.encode('utf-8'))
+
 
         suite.save()
         return suite.is_success
