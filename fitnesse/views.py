@@ -93,7 +93,6 @@ def results_aggregation(request, job_id):
 
     url_base = '"' + settings.get_jenkins_url() + '/job/' + job.name + '/"'
     r =  render(request, 'fitnesse/results_aggregation.html', {'job': job, 'builds': build_list, 'build_count': build_count,'tests': json.dumps(tests, separators=separators), 'url_base': url_base})
-    print '  time = %f' % (time.time() - t_begin)
     return r
 
 def find_suite_log(artifact, suite_name, test_name):

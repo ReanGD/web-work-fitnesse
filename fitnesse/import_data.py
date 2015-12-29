@@ -115,7 +115,7 @@ def _parse_suite_artifact(db, build, text):
         suite.save()
         return suite.is_success
     except Exception, e:
-        print "load error: %s" % str(e)
+        print("load error: %s" % str(e))
         suite.is_load = False
         suite.error_description = str(e)
         suite.save()
@@ -125,7 +125,7 @@ def _build_enumerator(db, jenkins, job):
     for build_number in jenkins.get_builds_id():
         build = db.get_build(job, build_number)
         if not build.is_load:
-            print build_number
+            print(build_number)
             yield build
 
 def import_job(job_name):
@@ -148,7 +148,7 @@ def import_job(job_name):
             build.start_time = jenkins.get_start_time(build.number)
             build.is_load = True
         except Exception, e:
-            print "load error: %s" % str(e)
+            print("load error: %s" % str(e))
             build.is_load = False
             build.error_description = str(e)
         build.save()
