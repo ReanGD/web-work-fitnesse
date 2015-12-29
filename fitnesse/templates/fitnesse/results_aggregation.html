@@ -1,32 +1,17 @@
+{% extends "fitnesse/_base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <title>Результаты fitnesse тестов для задачи {{ job.name }}</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'slickgrid/slick.grid.css' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'slickgrid/examples/examples.css' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'fitnesse/project/css/fitnesse.css' %}" />
-  <link rel="shortcut icon" href="{% static 'app/favicon.ico' %}" />
-</head>
-<body>
-  <ul class="fit_breadcrumb">
-    <li><a href="/fitnesse/">Home</a><span class="divider">/</span></li>
-    <li class="active">{{ job.name }}</li>
-  </ul>
-  <div class="fitnesse-result-grid"></div>
+{% block title %}Результаты fitnesse тестов для задачи {{ job.name }}{% endblock %}
 
-<script src="{% static 'slickgrid/lib/jquery-1.7.min.js' %}"></script>
-<script src="{% static 'slickgrid/lib/jquery.event.drag-2.2.js' %}"></script>
-<script src="{% static 'slickgrid/slick.core.js' %}"></script>
-<script src="{% static 'slickgrid/slick.grid.js' %}"></script>
-<script src="{% static 'slickgrid/slick.dataview.js' %}"></script>
+{% block body %}
+<ul class="fit_breadcrumb">
+  <li><a href="/fitnesse/">Home</a><span class="divider">/</span></li>
+  <li class="active">{{ job.name }}</li>
+</ul>
+<div class="fit-aggregation"></div>  
+{% endblock %}
+
+{% block script %}
 <script src="{% static 'fitnesse/project/js/aggregation.grid.js' %}"></script>
-
 <script>
 $(function () {
   {% autoescape off %}
@@ -34,11 +19,7 @@ $(function () {
   var tests = {{tests}};
   var url_base = {{url_base}};
   {% endautoescape %}
-  AggregationGridCreate(builds, tests, url_base);
-  $(".slick-viewport").focus();
+  CreateGrid(builds, tests, url_base);
 })
 </script>
-
-</body>
-</html>
-
+{% endblock %}
