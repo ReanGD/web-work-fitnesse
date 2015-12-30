@@ -69,7 +69,7 @@ def results_aggregation(request, job_id):
 
     tests = {}
     generator = iter(_get_tests_by_job(job))
-    test_id, test_success, old_test_name, old_suite_name, build_number = generator.next()
+    test_id, test_success, old_test_name, old_suite_name, build_number = next(generator)
     test_result = [[0, 0]]*build_count
     test_result[build_map[build_number]] = [test_id, 1 if test_success else 0]
     suite_result = collections.OrderedDict()
