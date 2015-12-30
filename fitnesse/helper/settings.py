@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 def get_jenkins_url():
     try:
         return CommonSettings.objects.get(name = "JenkinsUrl").text
-    except Exception, e:
+    except Exception as e:
         return 'http://172.28.1.33/'
 
 def set_jenkins_url(value):
@@ -21,7 +21,7 @@ def set_jenkins_url(value):
 def get_max_buids(job_ptr):
     try:
         return JobSettings.objects.get(job_ptr = job_ptr, name = "MaxBuilds").number
-    except Exception, e:
+    except Exception as e:
         return 50
 
 def set_max_buids(job_ptr, value):

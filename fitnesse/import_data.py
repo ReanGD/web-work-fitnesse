@@ -93,7 +93,7 @@ def _parse_suite_artifact(db, build, text):
 
     try:
         result = root.result
-    except AttributeError, e:
+    except AttributeError as e:
         suite.save()
         return suite.is_success
 
@@ -114,7 +114,7 @@ def _parse_suite_artifact(db, build, text):
 
         suite.save()
         return suite.is_success
-    except Exception, e:
+    except Exception as e:
         print("load error: %s" % str(e))
         suite.is_load = False
         suite.error_description = str(e)
@@ -147,7 +147,7 @@ def import_job(job_name):
 
             build.start_time = jenkins.get_start_time(build.number)
             build.is_load = True
-        except Exception, e:
+        except Exception as e:
             print("load error: %s" % str(e))
             build.is_load = False
             build.error_description = str(e)

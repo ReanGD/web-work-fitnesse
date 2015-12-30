@@ -20,7 +20,7 @@ class Worker(Thread):
             logger.info("start task: %s" % name)
             try:
                 func(*args, **kargs)
-            except Exception, e:
+            except Exception as e:
                 logger.error("finish task %s with error: %s" % (name, str(e)))
             finally:
                 logger.error("finish task %s success" % name)
