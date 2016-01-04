@@ -139,9 +139,11 @@ def test_result(request, job_id, test_id):
     build_url = settings.get_jenkins_url() + '/job/' + job.name + '/' + build_number
     return render(request, 'fitnesse/test_result.html', {'job': job, 'test_id': test_id, 'build_id': build_number, 'build_url': build_url, 'test_name': test_full_name, 'fitnesse_result': fitnesse_result})
 
+
 def fitnesse_result(request, job_id, test_id):
-    job = get_object_or_404(Job, pk = job_id)
-    artifact_key = get_object_or_404(KeyTestArtifact, key = "fitnesse_result")
-    artifact = get_object_or_404(TestArtifact, test_ptr = test_id, key_ptr = artifact_key)
+    job = get_object_or_404(Job, pk=job_id)
+    artifact_key = get_object_or_404(KeyTestArtifact, key="fitnesse_result")
+    artifact = get_object_or_404(TestArtifact, test_ptr=test_id, key_ptr=artifact_key)
+    artifact.content = bytes(artifact.content)
 
     return render(request, 'fitnesse/fitnesse_result.html', {'job': job, 'artifact': artifact})
