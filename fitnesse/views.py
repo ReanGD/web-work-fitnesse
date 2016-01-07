@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import Sum, Max, Q
+from django.db.models import Max, Q
 from aggregate_if import Count
 from django.utils.html import escape
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404
 
 from fitnesse.models import Job, Build, KeyBuildArtifact, BuildArtifact, Suite, Test, KeyTestArtifact, TestArtifact
 import fitnesse.helper.settings as settings
-import fitnesse.helper.tasks as tasks
-import fitnesse.import_data
 
 import re
 import json
@@ -17,8 +15,10 @@ import time
 import pytz
 import collections
 
+
 def changelog(request):
     return render(request, 'fitnesse/changelog.html')
+
 
 def jobs(request):
     jobs = Job.objects.all().annotate(build_count=Count('build'), build_last=Max('build__number'), start_time=Max('build__number'), _stat=Max('build__number')).order_by('name')
