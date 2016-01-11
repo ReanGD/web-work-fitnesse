@@ -1,53 +1,48 @@
+{% extends "fitnesse/_base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <title>Changelog</title>
-  <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link rel="shortcut icon" href="{% static 'app/favicon.ico' %}" />
-</head>
-<body>
-  <div class="container">
-    <div class="page-header">
-      <h1>Changelog</h1>
-    </div>
-    <div>
-      <p>Version 0.4</p>
-      <ul>
-        <li>Поддержка дублирующихся названия тестов</li>
-        <li>Отображение build id в результатах тестов</li>
-        <li>Раскрытие include страниц значками "+"/"-"</li>
-        <li>Поддержка fitnesse v20150814</li>
-        <li>Работа с докер</li>
-        <li>Обработка хуков от GitLab</li>
-        <li>Поддержка fitnesse v20140630</li>
-      </ul>
-      <p>Version 0.3</p>
-      <ul>
-        <li>Вывод времени последнего билда</li>
-        <li>Добавил favicon, breadcrumb</li>
-        <li>Страница с результатами теперь реагирует на Page Up\Down</li>
-        <li>Ссылки на билд в jenkins</li>
-        <li>Добавил вывод информации о последнем билде</li>
-      </ul>
-      <p>Version 0.2</p>
-      <ul>
-        <li>Графики для каждой задачи с кол-вом успешных и ошибочных тестов</li>
-        <li>Добавлены настройки: jenkins url и кол-во хранящихся билдов</li>
-        <li>Добавил отступ для названий тестов в таблице результатов</li>
-      </ul>
-      <p>Version 0.1</p>
-      <ul>
-        <li>Появление на свет сего замечательного продукта</li>
-      </ul>
-    </div>
+{% block title %}Changelog{% endblock %}
+{% block body %}
+<ul class="fit_breadcrumb">
+  <li><a href="/fitnesse/">Home</a><span class="divider">/</span></li>
+  <li class="active">Changelog</li>
+</ul>
+<div class="container">
+  <div class="page-header">
+    <h1>Changelog</h1>
   </div>
-  <script src="{% static 'jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-</body>
-</html>
+  <div>
+    <p>Version 0.5</p>
+    <ul>
+      <li>Самостоятельная генерация таблицы результатов, без вспомогательных библиотек</li>
+    </ul>
+    <p>Version 0.4</p>
+    <ul>
+      <li>Поддержка дублирующихся названия тестов</li>
+      <li>Отображение build id в результатах тестов</li>
+      <li>Раскрытие include страниц значками "+"/"-"</li>
+      <li>Поддержка fitnesse v20150814</li>
+      <li>Работа с докер</li>
+      <li>Обработка хуков от GitLab</li>
+      <li>Поддержка fitnesse v20140630</li>
+    </ul>
+    <p>Version 0.3</p>
+    <ul>
+      <li>Вывод времени последнего билда</li>
+      <li>Добавил favicon, breadcrumb</li>
+      <li>Страница с результатами теперь реагирует на Page Up\Down</li>
+      <li>Ссылки на билд в jenkins</li>
+      <li>Добавил вывод информации о последнем билде</li>
+    </ul>
+    <p>Version 0.2</p>
+    <ul>
+      <li>Графики для каждой задачи с кол-вом успешных и ошибочных тестов</li>
+      <li>Добавлены настройки: jenkins url и кол-во хранящихся билдов</li>
+      <li>Добавил отступ для названий тестов в таблице результатов</li>
+    </ul>
+    <p>Version 0.1</p>
+    <ul>
+      <li>Появление на свет сего замечательного продукта</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
