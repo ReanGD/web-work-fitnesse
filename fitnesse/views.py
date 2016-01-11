@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import Sum, Max, Q
+from django.db.models import Max, Q
 from aggregate_if import Count
 from django.utils.html import escape
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404
 
 from fitnesse.models import Job, Build, KeyBuildArtifact, BuildArtifact, Suite, Test, KeyTestArtifact, TestArtifact
 import fitnesse.helper.settings as settings
-import fitnesse.helper.tasks as tasks
-import fitnesse.import_data
 
 import re
 import json
@@ -17,8 +15,10 @@ import time
 import pytz
 import collections
 
+
 def changelog(request):
     return render(request, 'fitnesse/changelog.html')
+
 
 def jobs(request):
     jobs = Job.objects.all().annotate(build_count=Count('build'), build_last=Max('build__number'), start_time=Max('build__number'), _stat=Max('build__number')).order_by('name')
@@ -139,9 +139,11 @@ def test_result(request, job_id, test_id):
     build_url = settings.get_jenkins_url() + '/job/' + job.name + '/' + build_number
     return render(request, 'fitnesse/test_result.html', {'job': job, 'test_id': test_id, 'build_id': build_number, 'build_url': build_url, 'test_name': test_full_name, 'fitnesse_result': fitnesse_result})
 
+
 def fitnesse_result(request, job_id, test_id):
-    job = get_object_or_404(Job, pk = job_id)
-    artifact_key = get_object_or_404(KeyTestArtifact, key = "fitnesse_result")
-    artifact = get_object_or_404(TestArtifact, test_ptr = test_id, key_ptr = artifact_key)
+    job = get_object_or_404(Job, pk=job_id)
+    artifact_key = get_object_or_404(KeyTestArtifact, key="fitnesse_result")
+    artifact = get_object_or_404(TestArtifact, test_ptr=test_id, key_ptr=artifact_key)
+    artifact.content = bytes(artifact.content)
 
     return render(request, 'fitnesse/fitnesse_result.html', {'job': job, 'artifact': artifact})
