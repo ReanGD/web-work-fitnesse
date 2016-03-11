@@ -20,7 +20,7 @@ def push_event(request):
     git_mirror_job = jenk.get_job("GitMirror")
     git_mirror_job.invoke('QZ43NKLOYITZ5Y477D86XK37VTH5XIUF')
 
-    hook_info = json.loads(str(request.body))
+    hook_info = json.loads(request.body.decode())
     logger.debug(" ref = " + hook_info['ref'])
     logger.debug(" user_name = " + hook_info['user_name'])
 
