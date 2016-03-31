@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-import re
-import sys
 import fnmatch
 import jenkinsapi
 import lxml.objectify
@@ -41,14 +38,15 @@ class Jenkins:
         build = self.job[build_id]
         return build.get_timestamp()
 
+
 class Db:
 
     @transaction.atomic
     def get_job(self, job_name):
         try:
-            rec = Job.objects.get(name = job_name)
+            rec = Job.objects.get(name=job_name)
         except ObjectDoesNotExist:
-            rec = Job(name = job_name)
+            rec = Job(name=job_name)
             rec.save()
             settings.set_max_buids(rec, 50)
 
@@ -57,35 +55,36 @@ class Db:
     @transaction.atomic
     def get_build(self, job, build_number):
         try:
-            rec = Build.objects.get(number = build_number, job_ptr = job)
+            rec = Build.objects.get(number=build_number, job_ptr=job)
             if not rec.is_load:
-                Suite.objects.filter(build_ptr = rec).delete()
-                BuildArtifact.objects.filter(build_ptr = rec).delete()
+                Suite.objects.filter(build_ptr=rec).delete()
+                BuildArtifact.objects.filter(build_ptr=rec).delete()
         except ObjectDoesNotExist:
-            rec = Build(job_ptr = job, number = build_number, is_load = False, error_description = None, is_success = True)
+            rec = Build(job_ptr=job, number=build_number, is_load=False, error_description=None, is_success=True)
             rec.save()
         
         return rec
 
     @transaction.atomic
     def get_suite(self, build, suite_name, run_durations):
-        rec = Suite(build_ptr = build, name = escape(suite_name), run_durations = run_durations, is_load = True, error_description = None, is_success = True)
+        rec = Suite(build_ptr=build, name=escape(suite_name), run_durations=run_durations, is_load=True, error_description=None, is_success=True)
         rec.save()
 
         return rec
 
     @transaction.atomic
     def add_test(self, suite, test_number, test_name, run_durations, is_success, html_content):
-        rec = Test(suite_ptr = suite, number = test_number, name = escape(test_name), run_durations = run_durations, is_success = is_success)
+        rec = Test(suite_ptr=suite, number=test_number, name=escape(test_name), run_durations=run_durations, is_success=is_success)
         rec.save()
-        key_rec = KeyTestArtifact.objects.get(key = "fitnesse_result")
-        TestArtifact(test_ptr = rec, key_ptr = key_rec, content = html_content).save()
+        key_rec = KeyTestArtifact.objects.get(key="fitnesse_result")
+        TestArtifact(test_ptr=rec, key_ptr=key_rec, content=html_content).save()
 
     @transaction.atomic
     def add_artifact(self, build, key, subkey, content):
-        key_rec = KeyBuildArtifact.objects.get(key = key, subkey = subkey)
-        rec = BuildArtifact(build_ptr = build, key_ptr = key_rec, content = content)
+        key_rec = KeyBuildArtifact.objects.get(key=key, subkey=subkey)
+        rec = BuildArtifact(build_ptr=build, key_ptr=key_rec, content=content)
         rec.save()
+
 
 def _parse_suite_artifact(db, build, text):
     root = lxml.objectify.fromstring(text)
@@ -111,7 +110,6 @@ def _parse_suite_artifact(db, build, text):
                 tests[test_name] = 1
             db.add_test(suite, test_number, test_name, int(test_node.runTimeInMillis.text), is_success, test_node.content.text.encode('utf-8'))
 
-
         suite.save()
         return suite.is_success
     except Exception as e:
@@ -121,12 +119,14 @@ def _parse_suite_artifact(db, build, text):
         suite.save()
         raise Exception("Suite %s load with error: %s" % (suite.name, str(e)))
 
+
 def _build_enumerator(db, jenkins, job):
     for build_number in jenkins.get_builds_id():
         build = db.get_build(job, build_number)
         if not build.is_load:
             print(build_number)
             yield build
+
 
 def import_job(job_name):
     db = Db()
@@ -152,8 +152,10 @@ def import_job(job_name):
             build.is_load = False
             build.error_description = str(e)
         build.save()
-    
-    Build.objects.filter(pk__in = Build.objects.filter(job_ptr = job).order_by('-number').values_list('pk')[settings.get_max_buids(job):]).delete()
+
+    max_builds = settings.get_max_buids(job)
+    pk_arr = Build.objects.filter(job_ptr=job).order_by('-number').values_list('pk')[max_builds:]
+    Build.objects.filter(pk__in=pk_arr).delete()
 
 if __name__ == "__main__":
     pass
