@@ -102,11 +102,11 @@ def find_suite_log(artifact, suite_name, test_name):
     if not artifact:
         return {'before': '', 'test': 'not found fitnesse logs on client artifacts', 'after': ''}
 
-    text = str(artifact[0].content)
+    text = bytes(artifact[0].content).decode('866')
     m_start = re.search(start_pattern, text)
     m_stop = re.search(stop_pattern, text)
     if (not m_start) or (not m_stop):
-        return {'before': '', 'test': 'not found the test in fitnesse log ', 'after': ''}
+        return {'before': '', 'test': 'not found pattern ({0}) or ({1}) in client fitnesse log'.format(start_pattern, stop_pattern), 'after': ''}
 
     before_text = '\r'.join(text[:m_start.start()].split('\r')[-20:])
     find_text = text[m_start.start():m_stop.end()].rstrip()
@@ -117,7 +117,7 @@ def find_suite_log(artifact, suite_name, test_name):
 
     result = []
     for it in [before_text, find_text, after_text]:
-        it = escape(unicode(it, '866')).replace('\r\n', '<br/>').replace('\r', '<br/>').replace('\n', '<br/>')
+        it = escape(it).replace('\r\n', '<br/>').replace('\r', '<br/>').replace('\n', '<br/>')
         it = show_error(show_error(show_error(it, 'RPC_E_CALL_CANCELED'), 'System.Management.IWbemServices'), u'Узел назначения недоступен')
         result.append(it)
 
