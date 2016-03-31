@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import fnmatch
+import logging
 import jenkinsapi
 import lxml.objectify
 
@@ -9,6 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from fitnesse.models import Job, Build, KeyBuildArtifact, BuildArtifact, Suite, Test, KeyTestArtifact, TestArtifact
 import fitnesse.helper.settings as settings
+
+logger = logging.getLogger(__name__)
 
 
 class Jenkins:
@@ -60,14 +63,23 @@ class Db:
                 Suite.objects.filter(build_ptr=rec).delete()
                 BuildArtifact.objects.filter(build_ptr=rec).delete()
         except ObjectDoesNotExist:
-            rec = Build(job_ptr=job, number=build_number, is_load=False, error_description=None, is_success=True)
+            rec = Build(job_ptr=job,
+                        number=build_number,
+                        is_load=False,
+                        error_description=None,
+                        is_success=True)
             rec.save()
-        
+
         return rec
 
     @transaction.atomic
     def get_suite(self, build, suite_name, run_durations):
-        rec = Suite(build_ptr=build, name=escape(suite_name), run_durations=run_durations, is_load=True, error_description=None, is_success=True)
+        rec = Suite(build_ptr=build,
+                    name=escape(suite_name),
+                    run_durations=run_durations,
+                    is_load=True,
+                    error_description=None,
+                    is_success=True)
         rec.save()
 
         return rec
@@ -88,7 +100,9 @@ class Db:
 
 def _parse_suite_artifact(db, build, text):
     root = lxml.objectify.fromstring(text)
-    suite = db.get_suite(build, root.rootPath.text.split(".")[-1], int(root.totalRunTimeInMillis.text))
+    suite_name = root.rootPath.text.split(".")[-1]
+    suite = db.get_suite(build, suite_name, int(root.totalRunTimeInMillis.text))
+    logger.debug(" Start load suite {0}".format(suite_name))
 
     try:
         result = root.result
@@ -111,9 +125,9 @@ def _parse_suite_artifact(db, build, text):
             db.add_test(suite, test_number, test_name, int(test_node.runTimeInMillis.text), is_success, test_node.content.text.encode('utf-8'))
 
         suite.save()
+        logger.debug(" Finish load suite {0}".format(suite_name))
         return suite.is_success
     except Exception as e:
-        print("load error: %s" % str(e))
         suite.is_load = False
         suite.error_description = str(e)
         suite.save()
@@ -124,17 +138,18 @@ def _build_enumerator(db, jenkins, job):
     for build_number in jenkins.get_builds_id():
         build = db.get_build(job, build_number)
         if not build.is_load:
-            print(build_number)
             yield build
 
 
-def import_job(job_name):
+def import_job_impl(job_name):
     db = Db()
     job = db.get_job(job_name)
     jenkins = Jenkins(settings.get_jenkins_url(), job_name)
 
     for build in _build_enumerator(db, jenkins, job):
         try:
+            logger.debug("{0}: Start process build {1}".format(job_name, build.number))
+
             for artifact_text in jenkins.get_suite_artifacts(build.number):
                 if len(artifact_text) != 0:
                     is_success = _parse_suite_artifact(db, build, artifact_text)
@@ -147,8 +162,10 @@ def import_job(job_name):
 
             build.start_time = jenkins.get_start_time(build.number)
             build.is_load = True
+            logger.debug("{0}: Finish process build {1}".format(job_name, build.number))
         except Exception as e:
-            print("load error: %s" % str(e))
+            logger.debug("{0}: Processing the build {1} fails with an error: {2}".
+                         format(job_name, build.number, str(e)))
             build.is_load = False
             build.error_description = str(e)
         build.save()
@@ -156,6 +173,16 @@ def import_job(job_name):
     max_builds = settings.get_max_buids(job)
     pk_arr = Build.objects.filter(job_ptr=job).order_by('-number').values_list('pk')[max_builds:]
     Build.objects.filter(pk__in=pk_arr).delete()
+
+
+def import_job(job_name):
+    try:
+        logger.debug("Start import task {0}".format(job_name))
+        import_job_impl(job_name)
+        logger.debug("Finish import task {0}".format(job_name))
+    except Exception as e:
+        logger.error("Finish import task {0} with error: {1}".format(job_name, str(e)))
+
 
 if __name__ == "__main__":
     pass

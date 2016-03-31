@@ -99,11 +99,14 @@ def find_suite_log(artifact, suite_name, test_name):
     start_pattern = '!!! (\d|\.|\:|\ )+start test: \".*\.%s.%s\" !!!' % (suite_name, test_name)
     stop_pattern = '!!! (\d|\.|\:|\ )+stop test: \".*\.%s.%s\" !!!.*\s' % (suite_name, test_name)
 
-    text = str(artifact.content)
+    if not artifact:
+        return {'before': '', 'test': 'not found fitnesse logs on client artifacts', 'after': ''}
+
+    text = str(artifact[0].content)
     m_start = re.search(start_pattern, text)
     m_stop = re.search(stop_pattern, text)
     if (not m_start) or (not m_stop):
-        return {'before': '', 'test': 'not found', 'after': ''}
+        return {'before': '', 'test': 'not found the test in fitnesse log ', 'after': ''}
 
     before_text = '\r'.join(text[:m_start.start()].split('\r')[-20:])
     find_text = text[m_start.start():m_stop.end()].rstrip()
@@ -132,7 +135,7 @@ def test_result(request, job_id, test_id):
     test_name = str(test_info[0]['name'])
 
     artifact_key = get_object_or_404(KeyBuildArtifact, key = "ClientW8", subkey = "fitnesse_log")
-    artifact = get_object_or_404(BuildArtifact, build_ptr = build_id, key_ptr = artifact_key)
+    artifact = BuildArtifact.objects.filter(build_ptr = build_id, key_ptr = artifact_key)
     fitnesse_result = find_suite_log(artifact, suite_name, test_name)
 
     test_full_name = '%s.%s' % (suite_name, test_name)
