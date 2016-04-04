@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import Count, Sum, Max
-from django.utils.html import escape
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.http import HttpResponse
 
 import json
 import logging
@@ -13,8 +10,9 @@ import fitnesse.helper.settings as settings
 
 logger = logging.getLogger(__name__)
 
-def push_event(request):
-    logger.debug("=> [push_event]")
+
+def push_event_hv(request):
+    logger.debug("=> [push_event_hv]")
     logger.debug("    run GitMirror")
     jenk = jenkinsapi.jenkins.Jenkins(settings.get_jenkins_url())
     git_mirror_job = jenk.get_job("GitMirror")
@@ -25,7 +23,7 @@ def push_event(request):
     logger.debug(" user_name = " + hook_info['user_name'])
 
     if hook_info['ref'] == "refs/heads/master" and hook_info['user_name'] != "Jenkins":
-        logger.debug("    process master branch")
+        logger.debug("    hv: process master branch")
 
         # logger.debug("    run Packages-Pipeline")
         # packages_pl_job = jenk.get_job("Packages-Pipeline")
@@ -35,6 +33,23 @@ def push_event(request):
         hvGate_pl_job = jenk.get_job("hvGate-Pipeline-Run")
         hvGate_pl_job.invoke('G08CKH1LE5L6R13LP0AGSLNO7DDXC2VN')
 
-    logger.debug("<= [push_event]")
+    logger.debug("<= [push_event_hv]")
     return HttpResponse("<html><head></head><body>OK</body></html>")
 
+
+def push_event_web(request):
+    logger.debug("=> [push_event_web]")
+
+    jenkins = jenkinsapi.jenkins.Jenkins(settings.get_jenkins_url())
+    hook_info = json.loads(request.body.decode())
+    logger.debug(" ref = " + hook_info['ref'])
+    logger.debug(" user_name = " + hook_info['user_name'])
+
+    if hook_info['ref'] == "refs/heads/master" and hook_info['user_name'] != "Jenkins":
+        logger.debug("    web: process master branch")
+        logger.debug("    run hvGate-Pipeline-Run")
+        job = jenkins.get_job("Web-Pipeline-Run")
+        job.invoke('F17CKH1LE5L6R13LP0AGSLNO7DDXC3ER')
+
+    logger.debug("<= [push_event_web]")
+    return HttpResponse("<html><head></head><body>OK</body></html>")
