@@ -22,8 +22,8 @@ def push_event_hv(request):
     logger.debug(" ref = " + hook_info['ref'])
     logger.debug(" user_name = " + hook_info['user_name'])
 
-    if hook_info['ref'] in ["refs/heads/master", "refs/heads/develop"] and hook_info['user_name'] != "Jenkins":
-        logger.debug("    hv: process master or develop branch")
+    if hook_info['ref'] in ["refs/heads/master"] and hook_info['user_name'] != "Jenkins":
+        logger.debug("    hv: process master branch")
 
         # logger.debug("    run Packages-Pipeline")
         # packages_pl_job = jenk.get_job("Packages-Pipeline")
@@ -45,8 +45,8 @@ def push_event_web(request):
     logger.debug(" ref = " + hook_info['ref'])
     logger.debug(" user_name = " + hook_info['user_name'])
 
-    if hook_info['ref'] == "refs/heads/master" and hook_info['user_name'] != "Jenkins":
-        logger.debug("    web: process master branch")
+    if hook_info['ref'] in ["refs/heads/master", "refs/heads/develop"] and hook_info['user_name'] != "Jenkins":
+        logger.debug("    web: process master or develop branch")
         logger.debug("    run hvGate-Pipeline-Run")
         job = jenkins.get_job("Web-Pipeline-Run")
         job.invoke('F17CKH1LE5L6R13LP0AGSLNO7DDXC3ER')
