@@ -45,11 +45,30 @@ def push_event_web(request):
     logger.debug(" ref = " + hook_info['ref'])
     logger.debug(" user_name = " + hook_info['user_name'])
 
-    if hook_info['ref'] in ["refs/heads/master", "refs/heads/develop"] and hook_info['user_name'] != "Jenkins":
+    enable_refs = ["refs/heads/master", "refs/heads/develop"]
+    if hook_info['ref'] in enable_refs and hook_info['user_name'] != "Jenkins":
         logger.debug("    web: process master or develop branch")
-        logger.debug("    run hvGate-Pipeline-Run")
+        logger.debug("    run Web-Pipeline-Run")
         job = jenkins.get_job("Web-Pipeline-Run")
         job.invoke('F17CKH1LE5L6R13LP0AGSLNO7DDXC3ER')
 
     logger.debug("<= [push_event_web]")
+    return HttpResponse("<html><head></head><body>OK</body></html>")
+
+
+def push_event_monitoring(request):
+    logger.debug("=> [push_event_monitoring]")
+
+    jenkins = jenkinsapi.jenkins.Jenkins(settings.get_jenkins_url())
+    hook_info = json.loads(request.body.decode())
+    logger.debug(" ref = " + hook_info['ref'])
+    logger.debug(" user_name = " + hook_info['user_name'])
+
+    if hook_info['ref'] in ["refs/heads/master"] and hook_info['user_name'] != "Jenkins":
+        logger.debug("    monitoring: process master branch")
+        logger.debug("    run Monitoring-Pipeline-Run")
+        job = jenkins.get_job("Monitoring-Pipeline-Run")
+        job.invoke('F17CKH1LE5L6R13LP0AGSLNO7DDXCMON')
+
+    logger.debug("<= [push_event_monitoring]")
     return HttpResponse("<html><head></head><body>OK</body></html>")
